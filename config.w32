@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("noeval", "for noeval support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("noeval", "enable noeval support", "no");
+
+if (PHP_NOEVAL != "no") {
+	EXTENSION("noeval", "noeval.c");
+}
+
