@@ -1,0 +1,20 @@
+.build: &build-def
+  image: php:${PHP_VERSION}
+  script:
+    - phpize
+    - ./configure
+    - make
+  artifacts:
+    name: "noeval-php${PHP_VERSION}"
+    paths:
+      - modules/noeval.so
+
+build for php56:
+  <<: *build-def
+  variables:
+    PHP_VERSION: "5.6"
+
+build for php7:
+  <<: *build-def
+  variables:
+    PHP_VERSION: "7.0"
