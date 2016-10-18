@@ -1,5 +1,10 @@
+stages:
+  - build
+  - package
+
 .build: &build-def
   image: php:${PHP_VERSION}
+  stage: build
   script:
     - phpize
     - ./configure
@@ -9,12 +14,36 @@
     paths:
       - modules/noeval.so
 
+.package: &package-def
+  image: ruby:latest
+  stage: package
+  script:
+    - gem install fpm-cookery
+    - fpm-cook -p ubuntu package php${PHP_VERSION}-recipe.rb
+  artifacts:
+    paths:
+      - pkg/
+
 build for php56:
   <<: *build-def
   variables:
     PHP_VERSION: "5.6"
 
-build for php7:
+build for php70:
   <<: *build-def
   variables:
     PHP_VERSION: "7.0"
+
+package for php56:
+  <<: *package-def
+  variables:
+    PHP_VERSION: "5.6"
+  dependencies:
+    - "build for php56"
+
+package for php70:
+  <<: *package-def
+  variables:
+    PHP_VERSION: "7.0"
+  dependencies:
+    - "build for php70"
